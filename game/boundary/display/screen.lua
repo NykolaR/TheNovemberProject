@@ -9,6 +9,7 @@
 local Screen = {}
 if love.graphics.getCanvasFormats ().rgba8 then
     Screen ["canvas"] = love.graphics.newCanvas (10 * 32, 7 * 32, "rgba8")
+    Screen.canvas:setFilter ("nearest", "nearest")
 else
     print ("Err: RGBA8 Not Supported")
     love.event.quit ()
