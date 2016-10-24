@@ -30,7 +30,6 @@ function love.draw ()
     Screen.beginDraw ()
     
     -- PERFORM RENDERING TO CANVAS
-    
     Screen.clear ({255, 255, 255})
 
     for x = 0, 20, 1 do
@@ -52,9 +51,7 @@ function love.draw ()
     player:draw ()
 
     Screen.endDraw ()
-
     Screen.drawScreen ()
-
 end
 
 function logFPS ()
