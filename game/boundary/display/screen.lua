@@ -14,19 +14,19 @@ else
     print ("Err: RGBA8 Not Supported")
     love.event.quit ()
 end
-local mult = 1
-local drawX = (love.graphics.getWidth () - Screen.canvas:getWidth ()) / 2
-local drawY = (love.graphics.getHeight () - Screen.canvas:getHeight ()) / 2
+Screen.mult = 1
+Screen.drawX = (love.graphics.getWidth () - Screen.canvas:getWidth ()) / 2
+Screen.drawY = (love.graphics.getHeight () - Screen.canvas:getHeight ()) / 2
 
 
 -- Initialize the screen/canvas to be oriented correctly
 function Screen.init ()
-    while ((mult + 1) * Screen.canvas:getWidth ()) < love.graphics.getWidth () and ((mult + 1) * Screen.canvas:getHeight ()) < love.graphics.getHeight () do
-        mult = mult + 1
+    while ((Screen.mult + 1) * Screen.canvas:getWidth ()) < love.graphics.getWidth () and ((Screen.mult + 1) * Screen.canvas:getHeight ()) < love.graphics.getHeight () do
+        Screen.mult = Screen.mult + 1
     end
 
-    drawX = (love.graphics.getWidth () - Screen.canvas:getWidth () * mult) / 2
-    drawY = (love.graphics.getHeight () - Screen.canvas:getHeight () * mult) / 2
+    Screen.drawX = (love.graphics.getWidth () - Screen.canvas:getWidth () * Screen.mult) / 2
+    Screen.drawY = (love.graphics.getHeight () - Screen.canvas:getHeight () * Screen.mult) / 2
 end
 
 -- Clear canvas to black
@@ -56,7 +56,7 @@ end
 -- Draw canvas centered on screen
 function Screen.drawScreen ()
     love.graphics.setBlendMode ("alpha", "premultiplied")
-    love.graphics.draw (Screen.canvas, drawX, drawY, 0, mult, mult)
+    love.graphics.draw (Screen.canvas, Screen.drawX, Screen.drawY, 0, Screen.mult, Screen.mult)
 end
 
 return Screen

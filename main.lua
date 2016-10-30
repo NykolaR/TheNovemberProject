@@ -7,15 +7,17 @@
 
 local Input = require ("game.boundary.input.input")
 local Screen = require ("game.boundary.display.screen")
+local Draw = require ("game.boundary.display.draw")
+local Text = require ("game.boundary.display.text")
+local Area = require ("game.control.area")
 local PlayerModule = require ("game.entity.player")
-local player = PlayerModule.new (16 * 10, 16 * 7)
-local stone = love.graphics.newImage ("resources/stone.png")
-local stoneShadow = love.graphics.newImage ("resources/stoneshadow.png")
-local wall = love.graphics.newImage ("resources/wallmiddle.png")
+local player = PlayerModule.new (0,0)
 
 function love.load ()
     love.graphics.setBackgroundColor (0,0,0)
     Screen.init ()
+    Draw.loadTileSet ("resources/stoneTiles.png")
+    Area.loadArea ("castle", 0, 0)
 end
 
 function love.update (dt)
@@ -30,25 +32,11 @@ function love.draw ()
     Screen.beginDraw ()
     
     -- PERFORM RENDERING TO CANVAS
-    Screen.clear ({255, 255, 255})
+    Screen.clear ({10, 10, 10})
 
-    for x = 0, 20, 1 do
-        for y = 0, 14, 1 do
-            if x == 6 then
-                love.graphics.draw (wall, x*16,y*16,0,1,1)
-            elseif x == 7 then
-                love.graphics.draw (stoneShadow, x*16,y*16,0,1,1)
-            elseif x == 13 then
-                love.graphics.draw (wall, x*16,y*16,0,1,1)
-            elseif x == 14 then
-                love.graphics.draw (stoneShadow, x*16,y*16,0,1,1)
-            else
-                love.graphics.draw (stone, x * 16, y * 16, 0, 1, 1)
-            end
-        end
-    end
-    
+    Area.drawBottom () 
     player:draw ()
+    Area.drawTop ()
 
     Screen.endDraw ()
     Screen.drawScreen ()
