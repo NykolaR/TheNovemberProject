@@ -5,19 +5,35 @@
 -- Controls game scenes
 --
 
+-- MODULES REQUIRED --
+
 local Input = require ("game.boundary.input.input")
 local Screen = require ("game.boundary.display.screen")
-local Draw = require ("game.boundary.display.draw")
-local Text = require ("game.boundary.display.text")
-local Area = require ("game.control.area")
-local PlayerModule = require ("game.entity.player")
-local player = PlayerModule.new (0,0)
+local PlayArea = require ("game.control.playarea")
+
+local debug = false
+if debug then local Text = require ("game.boundary.display.text") end
+
+local img = love.graphics.newImage ("img.png")
+local psystem = love.graphics.newParticleSystem (img, 10)
+
+-- END MODULES --
+
+local playArea = PlayArea.new ()
 
 function love.load ()
     love.graphics.setBackgroundColor (0,0,0)
     Screen.init ()
-    Draw.loadTileSet ("resources/stoneTiles.png")
-    Area.loadArea ("castle", 0, 0)
+    playArea:init ()
+
+    -- Particleslol
+    psystem:setParticleLifetime (1, 3)
+    psystem:setEmissionRate (5)
+    psystem:setSizes (1, 0)
+    psystem:setSizeVariation (1)
+    psystem:setLinearAcceleration (-1, -1, 1, -2)
+    psystem:setColors (255, 100, 0, 255, 255, 255, 0, 255)
+
 end
 
 function love.update (dt)
@@ -25,24 +41,33 @@ function love.update (dt)
     if love.keyboard.isDown ("escape") then
         love.event.quit ()
     end
-    player:update (dt)
+    playArea:update (dt)
+
+    psystem:update (dt)
 end
 
 function love.draw ()
     Screen.beginDraw ()
+    love.graphics.setBlendMode ("alpha", "alphamultiply")
     
     -- PERFORM RENDERING TO CANVAS
     Screen.clear ({10, 10, 10})
 
-    Area.drawBottom () 
-    player:draw ()
-    Area.drawTop ()
+    playArea:draw ()
+
+    love.graphics.draw (psystem, 156, 156)
+
+    -- TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO --
+    -- REMOVE ON RELEASE --
+    if debug then logFPS () end
 
     Screen.endDraw ()
+
+    love.graphics.setBlendMode ("alpha", "premultiplied")
     Screen.drawScreen ()
 end
 
 function logFPS ()
     love.graphics.setColor (255, 255, 255)
-    love.graphics.print ("FPS: " .. tostring (love.timer.getFPS ()), 15, 15)
+    Text.string ("FPS " .. tostring (love.timer.getFPS ()), 15, 15)
 end

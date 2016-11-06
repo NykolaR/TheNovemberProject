@@ -11,11 +11,17 @@ Area ["bottom"] = {}
 Area ["middle"] = {}
 Area ["top"] = {}
 Area ["collisions"] = {}
+Area ["collisionValues"] = {}
 
+-- REQUIRED MODULES --
+
+local Rectangle = require ("game.logic.rectangle")
 local Draw = require ("game.boundary.display.draw")
 
-function Area.loadArea (areaName, x, y)
-    local data, size = love.filesystem.read ("resources/areas/"..areaName.."/"..x..y..".area")
+-- END MODULES --
+
+function Area.loadArea (x, y, z)
+    local data, size = love.filesystem.read ("resources/areas/"..z.."/"..x..","..y..".area")
 
     local dataTable = {}
 
@@ -31,12 +37,26 @@ function Area.loadArea (areaName, x, y)
     Area.middle = {}
     Area.top = {}
     Area.collisions = {}
-    for i = 1, #dataTable, 4 do
+
+    for i = 1, #dataTable, 3 do
         table.insert (Area.bottom, tonumber (dataTable [i]))
         table.insert (Area.middle, tonumber (dataTable [i + 1]))
         table.insert (Area.top, tonumber (dataTable [i + 2]))
-        table.insert (Area.collisions, tonumber (dataTable [i + 3]))
     end
+
+    for i = 1, #Area.bottom, 1 do
+        local temp = Area.bottom [i]
+        if Area.middle [i] > Area.bottom [i] then
+            temp = Area.middle [i]
+        end
+
+        if temp > 130 then
+            if temp < 179 then
+                table.insert (Area.collisions, Rectangle.new (Area.getX (i), Area.getY (i)))
+            end
+        end
+    end
+
 end
 
 function Area.drawBottom ()

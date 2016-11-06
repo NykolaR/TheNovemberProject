@@ -7,6 +7,8 @@
 --
 
 local Screen = {}
+Screen.__width = 10 * 32
+Screen.__height = 7 * 32
 if love.graphics.getCanvasFormats ().rgba8 then
     Screen ["canvas"] = love.graphics.newCanvas (10 * 32, 7 * 32, "rgba8")
     Screen.canvas:setFilter ("nearest", "nearest")
