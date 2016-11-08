@@ -10,6 +10,7 @@ Player.__width = 16
 Player.__height = 16
 Player.__spriteSheet = love.graphics.newImage ("resources/player.png")
 Player.__quads = {}
+Player.__speed = 1
 
 -- REQUIRED MODULES --
 
@@ -27,7 +28,7 @@ end
 -- Constructor
 -- Attributes gained: x, y, dir, weaponDrawn
 function Player.new (x, y)
-    return setmetatable ({hitbox = Rectangle.new (x, y), dir = 1, weaponDrawn = false}, Player)
+    return setmetatable ({hitbox = Rectangle.new (x, y), dir = 1, weaponDrawn = false, ori = 6}, Player)
 end
 
 -- Sets initial variables
@@ -57,35 +58,69 @@ end
 -- Maybe change but floor the final position?
 -- 4-way movement: if more than 1 dir entered, hori takes priority
 function Player:move (dt)
-    if Input.keyDown (Input ["KEYS"].LEFT) or Input.keyDown (Input ["KEYS"].RIGHT) then
+    local hori = (Input.keyDown (Input ["KEYS"].LEFT) or Input.keyDown (Input ["KEYS"].RIGHT))
+    local vert = (Input.keyDown (Input ["KEYS"].UP) or Input.keyDown (Input ["KEYS"].DOWN))
+
+    --
+    if hori and (self.hitbox.y == self.hitbox.yLast) then
+        if self.hitbox.x > self.hitbox.xLast then
+            self.dir = Constants.Directions.RIGHT
+            self.ori = Constants.Directions.HORIZONTAL
+        elseif self.hitbox.x < self.hitbox.xLast then
+            self.dir = Constants.Directions.LEFT
+            self.ori = Constants.Directions.HORIZONTAL
+        end
+    end
+
+    if vert and (self.hitbox.x == self.hitbox.xLast) then
+        if self.hitbox.y > self.hitbox.yLast then
+            self.dir = Constants.Directions.DOWN
+            self.ori = Constants.Directions.VERTICAL
+        elseif self.hitbox.y < self.hitbox.yLast then
+            self.dir = Constants.Directions.UP
+            self.ori = Constants.Directions.VERTICAL
+        end
+    end
+
+    if hori then
         if Input.keyDown (Input ["KEYS"].LEFT) then
-            self.hitbox.x = self.hitbox.x - 1
-            if not Input.keyDown (Input ["KEYS"].RIGHT) then
-                self.dir = 3
+            self.hitbox.x = self.hitbox.x - Player.__speed
+            if not vert then
+                if not Input.keyDown (Input ["KEYS"].RIGHT) then
+                    self.dir = Constants.Directions.LEFT
+                    self.ori = Constants.Directions.HORIZONTAL
+                end
             end
         end
 
         if Input.keyDown (Input ["KEYS"].RIGHT) then
-            self.hitbox.x = self.hitbox.x + 1
-            if not Input.keyDown (Input ["KEYS"].LEFT) then
-                self.dir = 4
+            self.hitbox.x = self.hitbox.x + Player.__speed
+            if not vert then
+                if not Input.keyDown (Input ["KEYS"].LEFT) then
+                    self.dir = Constants.Directions.RIGHT
+                    self.ori = Constants.Directions.HORIZONTAL
+                end
+            end
+        end
+    end
+
+    if vert then
+        if Input.keyDown (Input ["KEYS"].UP) then
+            self.hitbox.y = self.hitbox.y - Player.__speed
+            if not hori then
+                if not Input.keyDown (Input ["KEYS"].DOWN) then
+                    self.dir = Constants.Directions.UP
+                end
             end
         end
 
-        return
-    end
-
-    if Input.keyDown (Input ["KEYS"].UP) then
-        self.hitbox.y = self.hitbox.y - 1
-        if not Input.keyDown (Input ["KEYS"].DOWN) then
-            self.dir = 1
-        end
-    end
-
-    if Input.keyDown (Input ["KEYS"].DOWN) then
-        self.hitbox.y = self.hitbox.y + 1
-        if not Input.keyDown (Input ["KEYS"].UP) then
-            self.dir = 2
+        if Input.keyDown (Input ["KEYS"].DOWN) then
+            self.hitbox.y = self.hitbox.y + Player.__speed
+            if not hori then
+                if not Input.keyDown (Input ["KEYS"].UP) then
+                    self.dir = Constants.Directions.DOWN
+                end
+            end
         end
     end
 end

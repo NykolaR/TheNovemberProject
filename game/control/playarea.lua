@@ -20,7 +20,7 @@ local PlayerModule = require ("game.entity.player")
 -- Contructor
 function PlayArea.new ()
     return setmetatable ({
-    player = PlayerModule.new (48, 48),
+    player = PlayerModule.new (186, 186),
     enemies = {},
     playerWeapons = {},
     enemyWeapons = {},
@@ -73,26 +73,26 @@ function PlayArea:checkBoarders ()
     if self.player.hitbox.x < -8 then
         self.player.hitbox.x = self.player.hitbox.x + Screen.__width
         self.mapX = self.mapX - 1
-        Area.loadArea (self.area, self.mapX, self.mapY)
+        Area.loadArea (self.mapX, self.mapY, self.mapZ)
         return
     end
     if self.player.hitbox.x > (Screen.__width - 8) then
         self.player.hitbox.x = self.player.hitbox.x - Screen.__width
         self.mapX = self.mapX + 1
-        Area.loadArea (self.area, self.mapX, self.mapY)
+        Area.loadArea (self.mapX, self.mapY, self.mapZ)
         return
     end
 
     if self.player.hitbox.y < -8 then
         self.player.hitbox.y = self.player.hitbox.y + Screen.__height
         self.mapY = self.mapY - 1
-        Area.loadArea (self.area, self.mapX, self.mapY)
+        Area.loadArea (self.mapX, self.mapY, self.mapZ)
         return
     end
     if self.player.hitbox.y > (Screen.__height - 8) then
         self.player.hitbox.y = self.player.hitbox.y - Screen.__height
         self.mapY = self.mapY + 1
-        Area.loadArea (self.area, self.mapX, self.mapY)
+        Area.loadArea (self.mapX, self.mapY, self.mapZ)
         return
     end
 
