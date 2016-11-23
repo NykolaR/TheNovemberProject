@@ -7,11 +7,10 @@
 
 local Area = {}
 
-Area ["bottom"] = {}
-Area ["middle"] = {}
-Area ["top"] = {}
-Area ["collisions"] = {}
-Area ["collisionValues"] = {}
+Area.bottom = {}
+Area.middle = {}
+Area.top = {}
+Area.collisions = {}
 
 -- REQUIRED MODULES --
 
@@ -21,39 +20,23 @@ local Draw = require ("game.boundary.display.draw")
 -- END MODULES --
 
 function Area.loadArea (x, y, z)
-    local data, size = love.filesystem.read ("resources/areas/"..z.."/"..x..","..y..".area")
-
-    local dataTable = {}
-
-    for i in string.gmatch (data, "%S+") do
-        table.insert (dataTable, i)
-    end
-    
-    for i in data:gmatch ("%d+") do
-        table.insert (dataTable, tonumber (i))
-    end
+    local Data = require ("resources.areas."..z.."."..x..","..y)
 
     Area.bottom = {}
     Area.middle = {}
     Area.top = {}
-    Area.collisions = {}
 
-    for i = 1, #dataTable, 3 do
-        table.insert (Area.bottom, tonumber (dataTable [i]))
-        table.insert (Area.middle, tonumber (dataTable [i + 1]))
-        table.insert (Area.top, tonumber (dataTable [i + 2]))
+    for i = 1, #Data.bottom, 1 do
+        table.insert (Area.bottom, Data.bottom [i])
+        table.insert (Area.middle, Data.middle [i])
+        table.insert (Area.top, Data.top [i])
     end
 
-    for i = 1, #Area.bottom, 1 do
-        local temp = Area.bottom [i]
-        if Area.middle [i] > Area.bottom [i] then
-            temp = Area.middle [i]
-        end
+    Area.collisions = {}
 
-        if temp > 130 then
-            if temp < 179 then
-                table.insert (Area.collisions, Rectangle.new (Area.getX (i), Area.getY (i)))
-            end
+    for i = 1, #Data.collisions, 1 do
+        if Data.collisions [i] > -1 then
+            table.insert (Area.collisions, Rectangle.new (Area.getX (i), Area.getY (i)))
         end
     end
 

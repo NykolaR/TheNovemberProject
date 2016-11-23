@@ -45,7 +45,6 @@ end
 -- Also does collisions
 -- No rendering
 function PlayArea:update (dt)
-
     -- Movement
     self.player:update (dt)
 
@@ -62,6 +61,7 @@ end
 -- Calls all rendering functions
 -- No updates (no variable changes)
 function PlayArea:draw ()
+    -- If time is frozen, don't render Area
     Area.drawBottom ()
     self.player:draw ()
     Area.drawTop ()
