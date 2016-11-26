@@ -56,28 +56,28 @@ function Rectangle:collision (rectangle)
 end
 
 function Rectangle:collidedTop (rectangle)
-    if ( (self.x > (rectangle.x - rectangle.width)) and (self.x < rectangle.x + rectangle.width) ) then
+    if ( (self.x > (rectangle.x - self.width)) and (self.x < rectangle.x + rectangle.width) ) then
         return (   (self.yLast >= (rectangle.y + rectangle.height))   and   (self.y <= (rectangle.y + rectangle.height))   )
     end
     return false
 end
 
 function Rectangle:collidedRight (rectangle)
-    if ((self.y > (rectangle.y - rectangle.height)) and (self.y < rectangle.y + rectangle.height)) then
+    if ((self.y > (rectangle.y - self.height)) and (self.y < rectangle.y + rectangle.height)) then
         return (   ((self.xLast + self.width) <= rectangle.x)   and    ((self.x + self.width) >= rectangle.x)   )
     end
     return false
 end
 
 function Rectangle:collidedBottom (rectangle)
-    if ((self.x > (rectangle.x - rectangle.width)) and (self.x < rectangle.x + rectangle.width)) then
+    if ((self.x > (rectangle.x - self.width)) and (self.x < rectangle.x + rectangle.width)) then
         return (   ((self.yLast + self.height) <= rectangle.y)   and   ((self.y + self.height) >= rectangle.y)   )
     end
     return false
 end
 
 function Rectangle:collidedLeft (rectangle)
-    if ( (self.y > (rectangle.y - rectangle.height)) and (self.y < rectangle.y + rectangle.height) ) then
+    if ( (self.y > (rectangle.y - self.height)) and (self.y < rectangle.y + rectangle.height) ) then
         return (   (self.xLast >= (rectangle.x + rectangle.width))   and   (self.x <= (rectangle.x + rectangle.width))   )
     end
     return false
@@ -92,8 +92,9 @@ function Rectangle:resetY ()
 end
 
 function Rectangle:draw ()
-    love.graphics.setColor ({255, 0, 0})
+    love.graphics.setColor ({255, 0, 0, 64})
     love.graphics.rectangle ("fill", self.x, self.y, self.width, self.height)
+    love.graphics.setColor ({255, 255, 255})
 end
 
 return Rectangle

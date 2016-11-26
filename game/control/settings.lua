@@ -10,7 +10,7 @@ local Settings = {}
 --      LOAD SETTINGS
 -- else then
 Settings.particles = true
-Settings.debug = true
+Settings.debug = false
 Settings.HUDmode = true
 
 function Settings.saveSettings ()

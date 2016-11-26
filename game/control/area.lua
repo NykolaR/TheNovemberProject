@@ -36,7 +36,7 @@ function Area.loadArea (x, y, z)
 
     for i = 1, #Data.collisions, 1 do
         if Data.collisions [i] > -1 then
-            table.insert (Area.collisions, Rectangle.new (Area.getX (i), Area.getY (i)))
+            table.insert (Area.collisions, Rectangle.new (Area.getX (i), Area.getY (i), 16, 16))
         end
     end
 

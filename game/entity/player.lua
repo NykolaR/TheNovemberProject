@@ -37,7 +37,8 @@ function Player.new (x, y)
         ori = 6,
         sword = 1,
         swordFrame = 1,
-        swordSubFrame = 1
+        swordSubFrame = 1,
+        swordHitbox = Rectangle.new (x, y, 16, 16)
         }, Player)
 end
 
@@ -58,6 +59,8 @@ end
 -- Update player position, etc
 function Player:update (dt)
     self.hitbox:setLastPosition (self.hitbox.x, self.hitbox.y)
+
+
     if not self.weaponDrawn then
         self:move (dt)
         if Input.keyPressed (Input.KEYS.ACTION) then
@@ -76,6 +79,23 @@ function Player:update (dt)
         end
     end
     self.hitbox:setPosition (self.hitbox.x, self.hitbox.y)
+    self:setSwordHitbox ()
+end
+
+function Player:setSwordHitbox ()
+    if self.dir == Constants.Directions.UP then
+        self.swordHitbox.x = self.hitbox.x - 1
+        self.swordHitbox.y = self.hitbox.y - 16
+    elseif self.dir == Constants.Directions.RIGHT then
+        self.swordHitbox.x = self.hitbox.x + 7
+        self.swordHitbox.y = self.hitbox.y - 8
+    elseif self.dir == Constants.Directions.DOWN then
+        self.swordHitbox.x = self.hitbox.x - 1
+        self.swordHitbox.y = self.hitbox.y
+    else
+        self.swordHitbox.x = self.hitbox.x - 9
+        self.swordHitbox.y = self.hitbox.y - 8
+    end
 end
 
 -- Currently doesn't use dt (to maintain an integer value

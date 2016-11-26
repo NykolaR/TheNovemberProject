@@ -10,23 +10,25 @@
 local Input = require ("game.boundary.input.input")
 local Screen = require ("game.boundary.display.screen")
 local PlayArea = require ("game.control.playarea")
+local MainMenu = require ("game.control.mainmenu")
 local Settings = require ("game.control.settings")
 
--- END MODULES --
-
 if Settings.debug then Text = require ("game.boundary.display.text") end
+
+-- END MODULES --
 
 local img = love.graphics.newImage ("img.png")
 local psystem = love.graphics.newParticleSystem (img, 10)
 
-
 local playArea = PlayArea.new ()
+local mainMenu = MainMenu.new ()
 
 function love.load ()
     love.graphics.setBackgroundColor (0,0,0)
     Screen.init ()
     playArea:init ()
 
+    love.mouse.setVisible (false)
     -- Particleslol
     psystem:setParticleLifetime (1, 3)
     psystem:setEmissionRate (5)
@@ -41,9 +43,14 @@ function love.update (dt)
     if love.keyboard.isDown ("escape") then
         love.event.quit ()
     end
-    playArea:update (dt)
+
+    if mainMenu.gamestart then
+        playArea:update (dt)
+    else
+        mainMenu:update (dt)
+    end
     
-    psystem:update (dt)
+    --psystem:update (dt)
 end
 
 function love.draw ()
@@ -53,11 +60,15 @@ function love.draw ()
     -- PERFORM RENDERING TO CANVAS
     --Screen.clear ({10, 10, 10})  -- Don't /need/ because screen is always drawn over
 
-    playArea:draw ()
+    if mainMenu.gamestart then
+        playArea:draw ()
+    else
+        mainMenu:draw ()
+    end
 
-    love.graphics.draw (psystem, 156, 156)
+    --[[love.graphics.draw (psystem, 156, 156)
     love.graphics.draw (psystem, 100, 100)
-    love.graphics.draw (psystem, 150, 100)
+    love.graphics.draw (psystem, 150, 100)]]
 
     -- TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO --
     -- REMOVE ON RELEASE --

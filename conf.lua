@@ -16,8 +16,5 @@ function love.conf (t)
     t.window.minHeight = 7 * 32
 
     -- Disable joystick, mouse
-    --t.modules.joystick = false
     t.modules.touch = false
-    t.modules.mouse = false
-
 end
