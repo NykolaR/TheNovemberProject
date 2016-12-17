@@ -8,6 +8,14 @@
 local PlayArea = {}
 PlayArea.__index = PlayArea
 
+setmetatable (PlayArea, {
+    __call = function (cls, ...)
+        local self = setmetatable ({}, cls)
+        self:_init (...)
+        return self
+    end,
+})
+
 -- MODULES REQUIRED --
 
 local Draw = require ("game.boundary.display.draw")
@@ -17,17 +25,14 @@ local PlayerModule = require ("game.entity.player")
 
 -- END MODULES --
 
--- Contructor
-function PlayArea.new ()
-    return setmetatable ({
-    player = PlayerModule.new (186, 186),
-    enemies = {},
-    playerWeapons = {},
-    enemyWeapons = {},
-    mapX = 15,
-    mapY = 15,
-    mapZ = 5,
-    }, PlayArea)
+function PlayArea:_init ()
+    self.player = PlayerModule (186, 186)
+    self.enemies = {}
+    self.playerWeapons = {}
+    self.enemyWeapons = {}
+    self.mapX = 15
+    self.mapY = 15
+    self.mapZ = 5
 end
 
 -- A new game

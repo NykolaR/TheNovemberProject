@@ -13,6 +13,14 @@ Player.__quads = {}
 Player.__swordQuads = {}
 Player.__speed = 1
 
+setmetatable (Player, {
+    __call = function (cls, ...)
+        local self = setmetatable ({}, cls)
+        self:_init (...)
+        return self
+    end,
+})
+
 -- REQUIRED MODULES --
 
 Input = require ("game.boundary.input.input")
@@ -27,19 +35,15 @@ Swords = require ("game.entity.swords")
 Quads.generateQuads (Player.__quads, Player.__spriteSheet, Player.__tileSize)
 Quads.generateQuads (Player.__swordQuads, Player.__swordSheet, Player.__tileSize)
 
--- Constructor
--- Attributes gained: x, y, dir, weaponDrawn
-function Player.new (x, y)
-    return setmetatable ({
-        hitbox = Rectangle.new (x, y, 14, 8),
-        dir = 1,
-        weaponDrawn = false,
-        ori = 6,
-        sword = 1,
-        swordFrame = 1,
-        swordSubFrame = 1,
-        swordHitbox = Rectangle.new (x, y, 16, 16)
-        }, Player)
+function Player:_init (x, y)
+    self.hitbox = Rectangle (x, y, 14, 8)
+    self.dir = 1
+    self.weaponDrawn = false
+    self.ori = 6
+    self.sword = 1
+    self.swordFrame = 1
+    self.swordSubFrame = 1
+    self.swordHitbox = Rectangle (x, y, 16, 16)
 end
 
 -- Sets initial variables

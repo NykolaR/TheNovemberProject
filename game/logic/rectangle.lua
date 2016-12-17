@@ -5,21 +5,27 @@
 local Rectangle = {}
 Rectangle.__index = Rectangle
 
+setmetatable (Rectangle, {
+    __call = function (cls, ...)
+        local self = setmetatable ({}, cls)
+        self:_init (...)
+        return self
+    end,
+})
+
 -- REQUIRED MODULES --
 
 local Constants = require ("game.logic.constants")
 
 -- END MODULES --
 
-function Rectangle.new (x, y, width, height)
-    return setmetatable ({
-        x = x or 0,
-        y = y or 0,
-        xLast = x or 0,
-        yLast = y or 0,
-        width = width or 16,
-        height = height or 16
-        }, Rectangle)
+function Rectangle:_init (x, y, width, height)
+    self.x = x or 0
+    self.y = y or 0
+    self.xLast = x or 0
+    self.yLast = y or 0
+    self.width = width or 16
+    self.height = height or 16
 end
 
 -- Sets position

@@ -20,8 +20,8 @@ if Settings.debug then Text = require ("game.boundary.display.text") end
 local img = love.graphics.newImage ("img.png")
 local psystem = love.graphics.newParticleSystem (img, 10)
 
-local playArea = PlayArea.new ()
-local mainMenu = MainMenu.new ()
+local playArea = PlayArea ()
+local mainMenu = MainMenu ()
 
 function love.load ()
     love.graphics.setBackgroundColor (0,0,0)

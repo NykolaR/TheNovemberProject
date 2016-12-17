@@ -4,6 +4,7 @@
 --
 
 local Text = {}
+
 Text.__tileWidth = 8
 Text.__tileHeight = 8
 Text.__quads = {}

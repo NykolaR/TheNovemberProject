@@ -6,6 +6,15 @@
 
 local MainMenu = {}
 MainMenu.__index = MainMenu
+
+setmetatable (MainMenu, {
+    __call = function (cls, ...)
+        local self = setmetatable ({}, cls)
+        self:_init (...)
+        return self
+    end,
+})
+
 MainMenu.__quads = {}
 MainMenu.__tileSheet = love.graphics.newImage ("resources/title.png")
 MainMenu.__animSpeed = 40
@@ -19,13 +28,11 @@ local Text = require ("game.boundary.display.text")
 
 Quads.generateQuads (MainMenu.__quads, MainMenu.__tileSheet, 320, 224)
 
-function MainMenu.new ()
-    return setmetatable ({
-        selection = 0,
-        submenu = 0,
-        frame = 1,
-        subframe = 1
-    }, MainMenu)
+function MainMenu:_init ()
+    self.selection = 0
+    self.submenu = 0
+    self.frame = 1
+    self.subframe = 1
 end
 
 function MainMenu:update (dt)
