@@ -12,6 +12,8 @@ Music.__defaultPitch = 1
 -- Loads the arg into Music.__file
 -- Filename format example: "titletheme"
 function Music.loadMusic (title)
+    if not title then return end
+
     if Music.__file then
         Music.__file:stop ()
     end

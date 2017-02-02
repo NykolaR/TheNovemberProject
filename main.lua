@@ -17,25 +17,15 @@ if Settings.debug then Text = require ("game.boundary.display.text") end
 
 -- END MODULES --
 
-local img = love.graphics.newImage ("img.png")
-local psystem = love.graphics.newParticleSystem (img, 10)
-
 local playArea = PlayArea ()
 local mainMenu = MainMenu ()
 
 function love.load ()
-    love.graphics.setBackgroundColor (0,0,0)
+    love.mouse.setVisible (false)
+    love.math.setRandomSeed (os.time ())
+
     Screen.init ()
     playArea:init ()
-
-    love.mouse.setVisible (false)
-    -- Particleslol
-    psystem:setParticleLifetime (1, 3)
-    psystem:setEmissionRate (5)
-    psystem:setSizes (1, 0)
-    psystem:setSizeVariation (1)
-    psystem:setLinearAcceleration (-1, -1, 1, -1)
-    psystem:setColors (255, 100, 0, 255, 255, 255, 0, 255)
 end
 
 function love.update (dt)
@@ -49,8 +39,6 @@ function love.update (dt)
     else
         mainMenu:update (dt)
     end
-    
-    --psystem:update (dt)
 end
 
 function love.draw ()
@@ -66,13 +54,11 @@ function love.draw ()
         mainMenu:draw ()
     end
 
-    --[[love.graphics.draw (psystem, 156, 156)
-    love.graphics.draw (psystem, 100, 100)
-    love.graphics.draw (psystem, 150, 100)]]
-
     -- TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO --
     -- REMOVE ON RELEASE --
-    if Settings.debug then logFPS () end
+    if Settings.debug then 
+        logFPS ()
+    end
 
     Screen.endDraw ()
 
