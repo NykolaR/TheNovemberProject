@@ -5,28 +5,21 @@
 -- Player and enemy collisions
 --
 
-local PlayArea = {}
-PlayArea.__index = PlayArea
+local Class = require ("src.class")
 
-setmetatable (PlayArea, {
-    __call = function (cls, ...)
-        local self = setmetatable ({}, cls)
-        self:_init (...)
-        return self
-    end,
-})
+local PlayArea = Class.new ()
 
 -- MODULES REQUIRED --
 
 local Draw = require ("src.boundary.display.draw")
 local Area = require ("src.control.area")
 local Screen = require ("src.boundary.display.screen")
-local PlayerModule = require ("src.entity.player")
+local PlayerModule = require ("src.entity.playable.player")
 
 -- END MODULES --
 
 function PlayArea:_init ()
-    self.player = PlayerModule (186, 186)
+    self.player = PlayerModule (10 * 16, 10 * 16)
     self.enemies = {}
     self.playerWeapons = {}
     self.enemyWeapons = {}
@@ -50,16 +43,25 @@ end
 -- Also does collisions
 -- No rendering
 function PlayArea:update (dt)
-    -- Movement
-    self.player:update (dt)
-
-    -- Collision checks
-    for i,v in pairs (Area.collisions) do
-        self.player:environmentCollisions (v)
-    end
+    -- Updates
+    self:playerUpdate ()
 
     -- Check boarders
-    self:checkBoarders ()
+    self:checkBorders ()
+end
+
+function PlayArea:playerUpdate ()
+    self.player:update (dt)
+
+    self.player:updateHorizontal (dt)
+    for _,area in pairs (Area.collisions) do
+        self.player:environmentCollision (area, General.Directions.HORIZONTAL)
+    end
+
+    self.player:updateVertical (dt)
+    for _,area in pairs (Area.collisions) do
+        self.player:environmentCollision (area, General.Directions.VERTICAL)
+    end
 end
 
 -- Draw
@@ -74,7 +76,7 @@ end
 
 -- Check if player has crossed any borders
 -- If yes, change co-ordinates appropriately and load new area
-function PlayArea:checkBoarders ()
+function PlayArea:checkBorders ()
     if self.player.hitbox.x < -8 then
         self.player.hitbox.x = self.player.hitbox.x + Screen.__width
         self.mapX = self.mapX - 1

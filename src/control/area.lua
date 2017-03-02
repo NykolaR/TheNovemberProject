@@ -21,63 +21,80 @@ local Draw = require ("src.boundary.display.draw")
 
 -- END MODULES --
 
+local _width, _height, _tilesize = 0, 0, 0
+
 function Area.loadArea (x, y, z)
-    local Data = require ("assets.areas."..z.."."..x..","..y)
+    local data = require ("assets.areas."..z.."."..x..","..y)
+
+    _width, _height = data.width, data.height
+    _tilesize = data.tilewidth
 
     Area.bottom = {}
     Area.middle = {}
     Area.top = {}
 
-    for i = 1, #Data.bottom, 1 do
-        table.insert (Area.bottom, Data.bottom [i])
-        table.insert (Area.middle, Data.middle [i])
-        table.insert (Area.top, Data.top [i])
+    for i = 1, (_width * _height) do
+        table.insert (Area.bottom, data.layers [1].data [i])
+        table.insert (Area.middle, data.layers [2].data [i])
+        table.insert (Area.top, data.layers [3].data [i])
     end
 
     Area.collisions = {}
 
-    for i = 1, #Data.collisions, 1 do
-        if Data.collisions [i] > -1 then
-            table.insert (Area.collisions, Rectangle (Area.getX (i), Area.getY (i), 16, 16))
+    for i = 1, #Area.bottom do
+        if data.layers [4].data [i] > 1 then
+            table.insert (Area.collisions, Rectangle (Area.getX (i - 1), Area.getY (i - 1), _tilesize, _tilesize))
         end
     end
 end
 
 function Area.renderBottom ()
-    for i=1, #Area.bottom do
-        local x = Area.getX (i)
-        local y = Area.getY (i)
-        if Area.bottom [i] > 0 then
-            Draw.renderTile (Area.bottom [i], x, y)
-        end
-        if Area.middle [i] > 0 then
-            Draw.renderTile (Area.middle [i], x, y)
+    local index = 1
+
+    for y=0, _height - 1 do
+        for x=0, _width - 1 do
+            local drawX, drawY = x * _tilesize, y * _tilesize
+
+            if not (Area.bottom [index] == 0) then
+                Draw.renderTile (Area.bottom [index], drawX, drawY)
+            end
+
+            if not (Area.middle [index] == 0) then
+                Draw.renderTile (Area.middle [index], drawX, drawY)
+            end
+
+            index = index + 1
         end
     end
 end
 
 function Area.renderTop ()
-    for i=1, #Area.top do
-        if Area.top [i] > 0 then
-            local x = Area.getX (i)
-            local y = Area.getY (i)
-            Draw.renderTile (Area.top [i], x, y)
+    local index = 1
+
+    for y=0, _height - 1 do
+        for x=0, _width - 1 do
+            if not (Area.top [index] == 0) then
+                Draw.renderTile (Area.top [index], x * _tilesize, y * _tilesize)
+            end
+
+            index = index + 1
         end
     end
 end
 
-function Area.getX (i)
-    return ((i - 1) % 20) * 16
+function Area.getX (index)
+    return (index % _width) * _tilesize
 end
 
-function Area.getY (i)
-    return math.floor (((i - 1) / 20)) * 16
+function Area.getY (index)
+    return math.floor (index / _width) * _tilesize
 end
 
-function Area.getPositions (i)
-    return ((i - 1) % 20) * 16, math.floor (((i - 1) / 20)) * 16
+function Area.getPositions (index)
+    return Area.getX (index), Area.getY (index)
 end
 
+--[[
 function Area.getCollision (x, y)
     -- Derive tile number, then return the collision number
     x = (x - (x % 16)) / 16
@@ -86,5 +103,6 @@ function Area.getCollision (x, y)
     -- Index is x + y * 20
     return Area.collisions [x + y * 20] or 0
 end
+]]
 
 return Area
