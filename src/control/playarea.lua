@@ -58,9 +58,23 @@ function PlayArea:playerUpdate ()
         self.player:environmentCollision (area, General.Directions.HORIZONTAL)
     end
 
+    for _,interactable in pairs (Area.interactables) do
+        interactable:playerInteract (self.player, General.Directions.HORIZONTAL)
+        if self.player.weaponDrawn then
+            interactable:swordInteract (self.player.swordHitbox, General.Directions.HORIZONTAL)
+        end
+    end
+
     self.player:updateVertical (dt)
     for _,area in pairs (Area.collisions) do
         self.player:environmentCollision (area, General.Directions.VERTICAL)
+    end
+
+    for _,interactable in pairs (Area.interactables) do
+        interactable:playerInteract (self.player, General.Directions.VERTICAL)
+        if self.player.weaponDrawn then
+            interactable:swordInteract (self.player.swordHitbox, General.Directions.VERTICAL)
+        end
     end
 end
 

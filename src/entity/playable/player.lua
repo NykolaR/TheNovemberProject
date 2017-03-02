@@ -200,7 +200,7 @@ function Player:renderWeapon ()
         rotation = 3.142
     end
 
-    love.graphics.draw (Player._swordSheet, Player._swordQuads [self.swordFrame], self.hitbox.x - 1 + xPos, self.hitbox.y - 8 + yPos, rotation)
+    love.graphics.draw (Player._swordSheet, Player._swordQuads [self.swordFrame], math.floor (self.hitbox.x - 1 + xPos), math.floor (self.hitbox.y - 8 + yPos), rotation)
 end
 
 -- Checks for environmental collision

@@ -13,6 +13,7 @@ Area.bottom = {}
 Area.middle = {}
 Area.top = {}
 Area.collisions = {}
+Area.interactables = {}
 
 -- REQUIRED MODULES --
 
@@ -20,6 +21,8 @@ local Rectangle = require ("src.logic.rectangle")
 local Draw = require ("src.boundary.display.draw")
 
 -- END MODULES --
+
+local Interactables = require ("src.entity.interactable.base")
 
 local _width, _height, _tilesize = 0, 0, 0
 
@@ -40,10 +43,25 @@ function Area.loadArea (x, y, z)
     end
 
     Area.collisions = {}
+    Area.interactables = {}
 
     for i = 1, #Area.bottom do
         if data.layers [4].data [i] > 1 then
             table.insert (Area.collisions, Rectangle (Area.getX (i - 1), Area.getY (i - 1), _tilesize, _tilesize))
+        end
+
+        if data.layers [5].data [i] > 1 then
+            Area.interactable (data.layers [5].data [i], i)
+        end
+    end
+end
+
+function Area.interactable (data, index)
+    print ("adding " .. data)
+    for i,object in pairs (Interactables.items) do
+        if data == i then
+            print ("full adding")
+            table.insert (Area.interactables, object (Area.getX (index - 1), Area.getY (index - 1)))
         end
     end
 end
@@ -66,6 +84,10 @@ function Area.renderBottom ()
             index = index + 1
         end
     end
+
+    for _,obj in pairs (Area.interactables) do
+        obj:render ()
+    end
 end
 
 function Area.renderTop ()
@@ -78,6 +100,12 @@ function Area.renderTop ()
             end
 
             index = index + 1
+        end
+    end
+
+    for _,interact in pairs (Area.interactables) do
+        if interact.top then
+            interact:renderTop ()
         end
     end
 end

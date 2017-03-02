@@ -31,7 +31,7 @@ input ["KEYS"] = {LEFT = 1, RIGHT = 2, UP = 3, DOWN = 4, ACTION = 5, PAUSED = 6}
 
 --[[ Keyboard mappings --]]
 input ["KEYBOARD_KEYS"] =
-{LEFT = {"left", "a"}, RIGHT = {"right", "d"}, UP = {"up", "w"}, DOWN = {"down", "s"}, ACTION = {"b"}, PAUSED = {"return"}}
+{LEFT = {"left", "a"}, RIGHT = {"right", "d"}, UP = {"up", "w"}, DOWN = {"down", "s"}, ACTION = {"z"}, PAUSED = {"return"}}
 
 --[[ Joystick mappings. Automatically handles hat --]]
 -- TODO: Handle axis and multiple controllers --
