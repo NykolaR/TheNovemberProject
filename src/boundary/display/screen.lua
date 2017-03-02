@@ -16,6 +16,7 @@ else
     print ("Err: RGBA8 Not Supported")
     love.event.quit ()
 end
+
 Screen.mult = 1
 Screen.drawX = (love.graphics.getWidth () - Screen.canvas:getWidth ()) / 2
 Screen.drawY = (love.graphics.getHeight () - Screen.canvas:getHeight ()) / 2
@@ -46,17 +47,17 @@ function Screen.clear (color)
 end
 
 -- Begin rendering to the canvas
-function Screen.beginDraw ()
+function Screen.beginRender ()
     love.graphics.setCanvas (Screen.canvas)
 end
 
 -- End rendering to the canvas
-function Screen.endDraw ()
+function Screen.endRender ()
     love.graphics.setCanvas ()
 end
 
 -- Draw canvas centered on screen
-function Screen.drawScreen ()
+function Screen.render ()
     love.graphics.setBlendMode ("alpha", "premultiplied")
     love.graphics.draw (Screen.canvas, Screen.drawX, Screen.drawY, 0, Screen.mult, Screen.mult)
 end

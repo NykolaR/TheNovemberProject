@@ -4,6 +4,8 @@
 -- Purely a static class. Only one area is loaded at a time.
 -- Areas consist of one screen (20x14 tiles)
 --
+-- TODO TODO Make it load in tiled files actually well TODO TODO
+--
 
 local Area = {}
 
@@ -14,13 +16,13 @@ Area.collisions = {}
 
 -- REQUIRED MODULES --
 
-local Rectangle = require ("game.logic.rectangle")
-local Draw = require ("game.boundary.display.draw")
+local Rectangle = require ("src.logic.rectangle")
+local Draw = require ("src.boundary.display.draw")
 
 -- END MODULES --
 
 function Area.loadArea (x, y, z)
-    local Data = require ("resources.areas."..z.."."..x..","..y)
+    local Data = require ("assets.areas."..z.."."..x..","..y)
 
     Area.bottom = {}
     Area.middle = {}
@@ -39,28 +41,27 @@ function Area.loadArea (x, y, z)
             table.insert (Area.collisions, Rectangle (Area.getX (i), Area.getY (i), 16, 16))
         end
     end
-
 end
 
-function Area.drawBottom ()
+function Area.renderBottom ()
     for i=1, #Area.bottom do
         local x = Area.getX (i)
         local y = Area.getY (i)
         if Area.bottom [i] > 0 then
-            Draw.drawTile (Area.bottom [i], x, y)
+            Draw.renderTile (Area.bottom [i], x, y)
         end
         if Area.middle [i] > 0 then
-            Draw.drawTile (Area.middle [i], x, y)
+            Draw.renderTile (Area.middle [i], x, y)
         end
     end
 end
 
-function Area.drawTop ()
+function Area.renderTop ()
     for i=1, #Area.top do
         if Area.top [i] > 0 then
             local x = Area.getX (i)
             local y = Area.getY (i)
-            Draw.drawTile (Area.top [i], x, y)
+            Draw.renderTile (Area.top [i], x, y)
         end
     end
 end

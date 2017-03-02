@@ -18,10 +18,10 @@ setmetatable (PlayArea, {
 
 -- MODULES REQUIRED --
 
-local Draw = require ("game.boundary.display.draw")
-local Area = require ("game.control.area")
-local Screen = require ("game.boundary.display.screen")
-local PlayerModule = require ("game.entity.player")
+local Draw = require ("src.boundary.display.draw")
+local Area = require ("src.control.area")
+local Screen = require ("src.boundary.display.screen")
+local PlayerModule = require ("src.entity.player")
 
 -- END MODULES --
 
@@ -65,11 +65,11 @@ end
 -- Draw
 -- Calls all rendering functions
 -- No updates (no variable changes)
-function PlayArea:draw ()
+function PlayArea:render ()
     -- If time is frozen, don't render Area
-    Area.drawBottom ()
-    self.player:draw ()
-    Area.drawTop ()
+    Area.renderBottom ()
+    self.player:render ()
+    Area.renderTop ()
 end
 
 -- Check if player has crossed any borders

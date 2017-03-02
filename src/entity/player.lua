@@ -3,32 +3,25 @@
 -- The player!
 --
 
+local Class = require ("src.class")
 
-local Player = {}
-Player.__index = Player
+local Player = Class.new ()
+
 Player.__tileSize = 16
-Player.__spriteSheet = love.graphics.newImage ("resources/player.png")
-Player.__swordSheet = love.graphics.newImage ("resources/swords.png")
+Player.__spriteSheet = love.graphics.newImage ("assets/visual/sprites/player.png")
+Player.__swordSheet = love.graphics.newImage ("assets/visual/sprites/swords.png")
 Player.__quads = {}
 Player.__swordQuads = {}
 Player.__speed = 1
 
-setmetatable (Player, {
-    __call = function (cls, ...)
-        local self = setmetatable ({}, cls)
-        self:_init (...)
-        return self
-    end,
-})
-
 -- REQUIRED MODULES --
 
-Input = require ("game.boundary.input.input")
-Draw = require ("game.boundary.display.draw")
-Rectangle = require ("game.logic.rectangle")
-Constants = require ("game.logic.constants")
-Quads = require ("game.logic.quads")
-Swords = require ("game.entity.swords")
+Input = require ("src.boundary.input")
+Draw = require ("src.boundary.display.draw")
+Rectangle = require ("src.logic.rectangle")
+General = require ("src.logic.general")
+Quads = require ("src.logic.quads")
+Swords = require ("src.entity.swords")
 
 -- END MODULES --
 
@@ -87,13 +80,13 @@ function Player:update (dt)
 end
 
 function Player:setSwordHitbox ()
-    if self.dir == Constants.Directions.UP then
+    if self.dir == General.Directions.UP then
         self.swordHitbox.x = self.hitbox.x - 1
         self.swordHitbox.y = self.hitbox.y - 16
-    elseif self.dir == Constants.Directions.RIGHT then
+    elseif self.dir == General.Directions.RIGHT then
         self.swordHitbox.x = self.hitbox.x + 7
         self.swordHitbox.y = self.hitbox.y - 8
-    elseif self.dir == Constants.Directions.DOWN then
+    elseif self.dir == General.Directions.DOWN then
         self.swordHitbox.x = self.hitbox.x - 1
         self.swordHitbox.y = self.hitbox.y
     else
@@ -115,24 +108,24 @@ function Player:fourDirMove (dt)
     if vert then
         if not (Input.keyDown (Input.KEYS.UP) and Input.keyDown (Input.KEYS.DOWN)) then
             if Input.keyDown (Input.KEYS.UP) then
-                self.dir = Constants.Directions.UP
-                self.ori = Constants.Directions.VERTICAL
+                self.dir = General.Directions.UP
+                self.ori = General.Directions.VERTICAL
                 self.hitbox.y = self.hitbox.y - Player.__speed
             elseif Input.keyDown (Input.KEYS.DOWN) then
-                self.dir = Constants.Directions.DOWN
-                self.ori = Constants.Directions.VERTICAL
+                self.dir = General.Directions.DOWN
+                self.ori = General.Directions.VERTICAL
                 self.hitbox.y = self.hitbox.y + Player.__speed
             end
         end
     else
         if not (Input.keyDown (Input.KEYS.RIGHT) and Input.keyDown (Input.KEYS.LEFT)) then
             if Input.keyDown (Input.KEYS.RIGHT) then
-                self.dir = Constants.Directions.RIGHT
-                self.ori = Constants.Directions.HORIZONTAL
+                self.dir = General.Directions.RIGHT
+                self.ori = General.Directions.HORIZONTAL
                 self.hitbox.x = self.hitbox.x + Player.__speed
             elseif Input.keyDown (Input.KEYS.LEFT) then
-                self.dir = Constants.Directions.LEFT
-                self.ori = Constants.Directions.HORIZONTAL
+                self.dir = General.Directions.LEFT
+                self.ori = General.Directions.HORIZONTAL
                 self.hitbox.x = self.hitbox.x - Player.__speed
             end
         end
@@ -146,21 +139,21 @@ function Player:eightDirMove (dt)
     --
     if hori and (self.hitbox.y == self.hitbox.yLast) then
         if self.hitbox.x > self.hitbox.xLast then
-            self.dir = Constants.Directions.RIGHT
-            self.ori = Constants.Directions.HORIZONTAL
+            self.dir = General.Directions.RIGHT
+            self.ori = General.Directions.HORIZONTAL
         elseif self.hitbox.x < self.hitbox.xLast then
-            self.dir = Constants.Directions.LEFT
-            self.ori = Constants.Directions.HORIZONTAL
+            self.dir = General.Directions.LEFT
+            self.ori = General.Directions.HORIZONTAL
         end
     end
 
     if vert and (self.hitbox.x == self.hitbox.xLast) then
         if self.hitbox.y > self.hitbox.yLast then
-            self.dir = Constants.Directions.DOWN
-            self.ori = Constants.Directions.VERTICAL
+            self.dir = General.Directions.DOWN
+            self.ori = General.Directions.VERTICAL
         elseif self.hitbox.y < self.hitbox.yLast then
-            self.dir = Constants.Directions.UP
-            self.ori = Constants.Directions.VERTICAL
+            self.dir = General.Directions.UP
+            self.ori = General.Directions.VERTICAL
         end
     end
 
@@ -169,8 +162,8 @@ function Player:eightDirMove (dt)
             self.hitbox.x = self.hitbox.x - Player.__speed
             if not vert then
                 if not Input.keyDown (Input ["KEYS"].RIGHT) then
-                    self.dir = Constants.Directions.LEFT
-                    self.ori = Constants.Directions.HORIZONTAL
+                    self.dir = General.Directions.LEFT
+                    self.ori = General.Directions.HORIZONTAL
                 end
             end
         end
@@ -179,8 +172,8 @@ function Player:eightDirMove (dt)
             self.hitbox.x = self.hitbox.x + Player.__speed
             if not vert then
                 if not Input.keyDown (Input ["KEYS"].LEFT) then
-                    self.dir = Constants.Directions.RIGHT
-                    self.ori = Constants.Directions.HORIZONTAL
+                    self.dir = General.Directions.RIGHT
+                    self.ori = General.Directions.HORIZONTAL
                 end
             end
         end
@@ -191,7 +184,7 @@ function Player:eightDirMove (dt)
             self.hitbox.y = self.hitbox.y - Player.__speed
             if not hori then
                 if not Input.keyDown (Input ["KEYS"].DOWN) then
-                    self.dir = Constants.Directions.UP
+                    self.dir = General.Directions.UP
                 end
             end
         end
@@ -200,7 +193,7 @@ function Player:eightDirMove (dt)
             self.hitbox.y = self.hitbox.y + Player.__speed
             if not hori then
                 if not Input.keyDown (Input ["KEYS"].UP) then
-                    self.dir = Constants.Directions.DOWN
+                    self.dir = General.Directions.DOWN
                 end
             end
         end
@@ -210,28 +203,28 @@ end
 -- Draw the player
 -- As usual, never perform any logic here
 -- Not even animation logic (so if paused the animations stop)
-function Player:draw ()
+function Player:render ()
     love.graphics.draw (Player.__spriteSheet, Player.__quads [self.dir], self.hitbox.x - 1, self.hitbox.y - 8)
     if self.weaponDrawn then
-        self:drawWeapon ()
+        self:renderWeapon ()
     end
 end
 
-function Player:drawWeapon ()
+function Player:renderWeapon ()
     local rotation = 0
     local xPos = 0
     local yPos = 0
 
-    if self.dir == Constants.Directions.UP then
+    if self.dir == General.Directions.UP then
         rotation = 4.712 -- 90 degrees, ew
         yPos = 8
-    elseif self.dir == Constants.Directions.RIGHT then
+    elseif self.dir == General.Directions.RIGHT then
         xPos = 8
-    elseif self.dir == Constants.Directions.DOWN then
+    elseif self.dir == General.Directions.DOWN then
         yPos = 8
         xPos = 16
         rotation = 1.571
-    elseif self.dir == Constants.Directions.LEFT then
+    elseif self.dir == General.Directions.LEFT then
         yPos = 16
         xPos = 8
         rotation = 3.142
@@ -244,10 +237,12 @@ end
 function Player:environmentCollisions (rectangle)
     local check = self.hitbox:collision (rectangle)
 
-    if check [Constants.Directions.UP] then self.hitbox.y = rectangle.y + rectangle.height end
-    if check [Constants.Directions.DOWN] then self.hitbox.y = rectangle.y - self.hitbox.height end
-    if check [Constants.Directions.LEFT] then self.hitbox.x = rectangle.x + rectangle.width end
-    if check [Constants.Directions.RIGHT] then self.hitbox.x = rectangle.x - self.hitbox.width end
+    if not check then return end
+
+    if check [General.Directions.UP] then self.hitbox.y = rectangle.y + rectangle.height end
+    if check [General.Directions.DOWN] then self.hitbox.y = rectangle.y - self.hitbox.height end
+    if check [General.Directions.LEFT] then self.hitbox.x = rectangle.x + rectangle.width end
+    if check [General.Directions.RIGHT] then self.hitbox.x = rectangle.x - self.hitbox.width end
 end
 
 function Player:resetX ()

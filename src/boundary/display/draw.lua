@@ -7,12 +7,12 @@
 local Draw = {}
 Draw.__tilesize = 16
 Draw.__quads = {}
-Draw.__tileSet = love.graphics.newImage ("resources/tilest.png")
+Draw.__tileSet = love.graphics.newImage ("assets/visual/tiles/tilest.png")
 Draw.__numTiles = (Draw.__tileSet:getWidth () / 16 - 1) * (Draw.__tileSet:getHeight () / 16 - 1)
 
 -- REQUIRED MODULES --
 
-local Quads = require ("game.logic.quads")
+local Quads = require ("src.logic.quads")
 
 -- END MODULES --
 
@@ -32,7 +32,7 @@ function Draw.loadTileSet (name)
 end
 
 -- Draws tile at index at position x,y
-function Draw.drawTile (tileIndex, x, y)
+function Draw.renderTile (tileIndex, x, y)
     love.graphics.draw (Draw.__tileSet, Draw.__quads [tileIndex], x, y)
 end
 

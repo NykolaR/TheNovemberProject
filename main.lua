@@ -7,13 +7,15 @@
 
 -- MODULES REQUIRED --
 
-local Input = require ("game.boundary.input.input")
-local Screen = require ("game.boundary.display.screen")
-local PlayArea = require ("game.control.playarea")
-local MainMenu = require ("game.control.mainmenu")
-local Settings = require ("game.control.settings")
+local Input = require ("src.boundary.input")
+local Screen = require ("src.boundary.display.screen")
+local PlayArea = require ("src.control.playarea")
+local MainMenu = require ("src.control.mainmenu")
+local Settings = require ("src.control.settings")
 
-if Settings.debug then Text = require ("game.boundary.display.text") end
+local font = love.graphics.newImageFont ("assets/visual/font.png",
+    " abcdefghijklmnopqrstuvwxyz0123456789", 1)
+love.graphics.setFont (font)
 
 -- END MODULES --
 
@@ -42,16 +44,16 @@ function love.update (dt)
 end
 
 function love.draw ()
-    Screen.beginDraw ()
+    Screen.beginRender ()
     love.graphics.setBlendMode ("alpha", "alphamultiply")
     
     -- PERFORM RENDERING TO CANVAS
     --Screen.clear ({10, 10, 10})  -- Don't /need/ because screen is always drawn over
 
     if mainMenu.gamestart then
-        playArea:draw ()
+        playArea:render ()
     else
-        mainMenu:draw ()
+        mainMenu:render ()
     end
 
     -- TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO --
@@ -60,13 +62,14 @@ function love.draw ()
         logFPS ()
     end
 
-    Screen.endDraw ()
+    Screen.endRender ()
 
     love.graphics.setBlendMode ("alpha", "premultiplied")
-    Screen.drawScreen ()
+    Screen.render ()
 end
 
 function logFPS ()
     love.graphics.setColor (255, 255, 255)
-    Text.string ("FPS " .. tostring (love.timer.getFPS ()), 15, 15)
+    --Text.string ("FPS " .. tostring (love.timer.getFPS ()), 15, 15)
+    love.graphics.print ("FPS " .. tostring (love.timer.getFPS ()), 15, 15)
 end

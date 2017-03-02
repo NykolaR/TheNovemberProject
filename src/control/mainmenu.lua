@@ -4,25 +4,17 @@
 -- Can control settings and do other neat things
 --
 
-local MainMenu = {}
-MainMenu.__index = MainMenu
+local Class = require ("src.class")
 
-setmetatable (MainMenu, {
-    __call = function (cls, ...)
-        local self = setmetatable ({}, cls)
-        self:_init (...)
-        return self
-    end,
-})
+local MainMenu = Class.new ()
 
 MainMenu.__quads = {}
-MainMenu.__tileSheet = love.graphics.newImage ("resources/title.png")
+MainMenu.__tileSheet = love.graphics.newImage ("assets/visual/sprites/title.png")
 MainMenu.__animSpeed = 40
 
 -- REQUIRED MODULES --
 
-local Quads = require ("game.logic.quads")
-local Text = require ("game.boundary.display.text")
+local Quads = require ("src.logic.quads")
 
 -- END MODULES --
 
@@ -50,9 +42,9 @@ function MainMenu:update (dt)
     end
 end
 
-function MainMenu:draw ()
+function MainMenu:render ()
     love.graphics.draw (MainMenu.__tileSheet, MainMenu.__quads [self.frame], 0, 0)
-    Text.string ("PRESS START", 20, 180)
+    love.graphics.print ("PRESS START", 20, 180)
 end
 
 return MainMenu
